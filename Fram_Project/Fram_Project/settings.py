@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+# set PATH=%PATH%;C:\Program Files\nodejs
+
 
 from pathlib import Path
 import os
@@ -26,7 +28,7 @@ SECRET_KEY = 'django-insecure-*9i76(324$tq)2u3g&s1dj@e(otx#@2lgm0_#mdgyxzxds5j(1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -42,9 +44,23 @@ INSTALLED_APPS = [
     # self made app
 
 
-    # Installed app
-    # 'tailwaind'
+    # Out Installed app
+    'tailwind',
+    'theme',
+
+    'django_browser_reload',
 ]
+
+# for tailwid setup
+
+TAILWIND_APP_NAME = 'theme'
+
+INTERNAL_IPS = [
+    '127.0.0.1',  # IPv4 localhost
+    'localhost',  # localhost as hostname
+]
+NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,6 +70,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'Fram_Project.urls'
