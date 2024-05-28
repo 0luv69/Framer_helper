@@ -9,25 +9,109 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		{% tailwind_css %}
+        {% tailwind_css %}
+        
+        <style>
+            {% block styles %}
 
-        {% block styles %}
+            {% endblock styles %}
+    
+        </style>
           
-        {% endblock styles %}
 	</head>
 
-	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
+	<body class="bg-gray-50 font-serif leading-normal tracking-normal max-h-[80vh]">
         <header class="bg-white shadow-md">
             <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-              <h1 class="text-2xl font-bold text-gray-800">My E-commerce</h1>
+              <a href="/"><h1 class="text-2xl font-bold text-gray-800">My E-commerce</h1></a>
               <nav>
-                <a href="#" class="text-gray-600 hover:text-gray-800 ml-4">Home</a>
-                <a href="#" class="text-gray-600 hover:text-gray-800 ml-4">Shop</a>
-                <a href="#" class="text-gray-600 hover:text-gray-800 ml-4">About</a>
-                <a href="#" class="text-gray-600 hover:text-gray-800 ml-4">Contact</a>
+                <a id="loginBtn" class="text-gray-600 hover:text-gray-800 ml-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Login</a>
               </nav>
             </div>
-          </header>
+        </header>
+
+        <section>
+          <div id="loginModal" class="modal fixed inset-0 flex items-center justify-center z-50" style="display: none;" >
+          <div class="relative bg-white p-8 rounded-lg shadow-lg">
+            <button id="closeLoginModal" class="absolute top-0 right-0 m-4 text-gray-600 hover:text-gray-800">&times;</button>
+            <h1 class="text-2xl font-semibold mb-4">Login</h1>
+            <form method="post" action="/login/">
+              {% csrf_token %}
+              <div class="mb-4">
+                <label for="email" class="block text-gray-700">Email</label>
+                <input type="email" id="email" name="email" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <div class="mb-4">
+                <label for="password" class="block text-gray-700">Password</label>
+                <input type="password" id="password" name="password" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Login</button>
+            </form>
+            <p class="mt-4 text-gray-700">Don't have an account? <a href="#" id="switchToSignUp" class="text-blue-500">Sign up here</a>.</p>
+          </div>
+        </div>
+        
+        <!-- Sign-up Pop-up -->
+        <div id="signUpModal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden">
+          <div class="bg-white p-8 rounded-lg shadow-lg">
+            <button id="closeSignUpModal" class="absolute top-0 right-0 m-4 text-gray-600 hover:text-gray-800">&times;</button>
+            <h1 class="text-2xl font-semibold mb-4">Sign Up</h1>
+            <form method="post" action="/signup/">
+
+              <div class="mb-4">
+                <label for="signupEmail" class="block text-gray-700">Email</label>
+                <input type="email" id="signupEmail" name="email" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <div class="mb-4">
+                <label for="signupPassword" class="block text-gray-700">Password</label>
+                <input type="password" id="signupPassword" name="password" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Sign Up</button>
+            </form>
+            <p class="mt-4 text-gray-700">Already have an account? <a href="#" id="switchToLogin" class="text-blue-500">Login here</a>.</p>
+          </div>
+        </div>
+        <script>
+          const loginModal = document.getElementById('loginModal');
+          const signUpModal = document.getElementById('signUpModal');
+          const loginBtn = document.getElementById('loginBtn');
+          const switchToSignUp = document.getElementById('switchToSignUp');
+          const switchToLogin = document.getElementById('switchToLogin');
+          const closeLoginModal = document.getElementById('closeLoginModal');
+          const closeSignUpModal = document.getElementById('closeSignUpModal');
+        
+          // Open login pop-up when the login button is clicked
+          loginBtn.addEventListener('click', function() {
+            loginModal.style.display = 'flex';
+          });
+        
+          // Open sign-up pop-up when "Sign up here" is clicked
+          switchToSignUp.addEventListener('click', function(event) {
+            event.preventDefault();
+            loginModal.style.display = 'none';
+            signUpModal.style.display = 'flex';
+          });
+        
+          // Open login pop-up when "Login here" is clicked
+          switchToLogin.addEventListener('click', function(event) {
+            event.preventDefault();
+            signUpModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+          });
+        
+          // Close login pop-up when close button is clicked
+          closeLoginModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+          });
+        
+          // Close sign-up pop-up when close button is clicked
+          closeSignUpModal.addEventListener('click', function() {
+            signUpModal.style.display = 'none';
+          });
+        </script></section>
+
+
+
         {% block content %}
           
         {% endblock content %}
@@ -38,8 +122,12 @@
             </div>
         </footer>
 
-        {% block scripts %}
-          
-        {% endblock scripts %}
+        <script>        
+                      
+
+            {% block scripts %}
+            {% endblock scripts %}
+        </script>
+
 	</body>
 </html>

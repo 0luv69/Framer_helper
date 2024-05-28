@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="container mx-auto px-4 py-8 min-h-[80vh]">
+
+    <!-- Product Image and Description -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <!-- Product Images -->
+
+      <div class="flex justify-center items-center">
+        <div class="w-full md:w-2/3">
+        {% if product.product_images.exists %}
+          <img src="/media/{{product.product_images.first.image}}" alt="Product" class="w-full object-contain">
+          <div class="grid grid-cols-4 gap-4 mt-4">
+            <!-- Sub Images (Change src for each image) -->
+            {% for img in product.product_images.all %}
+            <img src="/media/{{img.image}}" alt="Sub Image 1" class="w-full h-16 object-contain cursor-pointer">
+            {% endfor %}
+          </div>
+          {% else %}
+          <img src="https://via.placeholder.com/300" alt="Product 2" class="w-full h-56 object-cover">
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">{{product.title}}</h1>
+        <div class="flex items-center mt-2">
+          <div class="text-yellow-400">
+            <!-- Rating Stars (You can replace this with actual rating system) -->
+            ★★★★☆
+          </div>
+          <span class="text-gray-600 ml-2">(24 Reviews)</span>
+        </div>
+        <p class="text-gray-700 mt-4">{{product.discription}}</p>
+        <div class="mt-4">
+          <span class="text-2xl font-bold text-gray-800">Rs. {{product.price}}</span>
+          <!-- <span class="text-gray-600 line-through ml-2">$129.99</span> -->
+        </div>
+        <button class="mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Add to Cart</button>
+      </div>
+
+    </div>
+</div>    
+
+{% endblock content %}

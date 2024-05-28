@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # self made app
+    'shophouse',
 
 
     # Out Installed app
@@ -59,6 +60,7 @@ INTERNAL_IPS = [
     '127.0.0.1',  # IPv4 localhost
     'localhost',  # localhost as hostname
 ]
+
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 
