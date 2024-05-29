@@ -21,7 +21,6 @@ def product_view(request, slug):
     try: 
         products = Product.objects.get(slug=slug)
         context = {'product': products}
-
         return render(request, 'pages/product.html', context)
 
     except:
@@ -29,25 +28,23 @@ def product_view(request, slug):
 
 
 def login_page(request):
-
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         user_obj = User.objects.filter(username = email)
         if not user_obj.exists():
             messages.warning(request, "Email seems New to me, Plz First register.")
-            return HttpResponseRedirect(request.path_info)
+            return HttpResponseRedirect('/')
         
         if not user_obj[0].profile.is_email_verified:
             messages.success(request, "Naughty !! Naughty !! Your account is not Verified till yet")
-            return HttpResponseRedirect(request.path_info)
-        
+            return HttpResponseRedirect('/')
+                
         user_obj = authenticate(username = email, password= password)
         if user_obj:
             login(request, user_obj)
             return redirect('/')
         
-
         messages.success(request, "Opps, hey you made some mistake. Try again")
         return HttpResponseRedirect(request.path_info)
     return redirect('/')

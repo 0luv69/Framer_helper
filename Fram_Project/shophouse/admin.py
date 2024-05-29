@@ -3,8 +3,8 @@ from .models import *
 
 
 # User admin 
-admin.site.register(FramerInfo)
-admin.site.register(BuyersInfo)
+admin.site.register(FramerUser)
+admin.site.register(BuyerUser)
 
 
 # Product amdin page view
