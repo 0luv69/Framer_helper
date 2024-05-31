@@ -253,21 +253,23 @@ def checkout(request):
 
         return redirect('/history/')
 
-
     total_items_num = 0
     if request.user.is_authenticated:
-        carts_info = Cart.objects.filter(user=request.user)
-        for each_cart in carts_info:
-            total_items_num += each_cart.quantity
-    each_total_price=[]
-    total_price=0
-    for each_cart in carts_info:
-        each_total_price.append(each_cart.product.price * each_cart.quantity)
-        total_price+=(each_cart.product.price * each_cart.quantity)
-    
-    context = {"total_items_num":total_items_num, 'carts_info':carts_info, 'each_total_price':each_total_price, 'total_price':total_price,'identify_farmer': identify_farmer(request.user)}
+        carts_info = Cart.objects.filter(user=request.user, status='cart')
+        if carts_info:
+            for each_cart in carts_info:
+                total_items_num += each_cart.quantity
+            each_total_price=[]
+            total_price=0
+            for each_cart in carts_info:
+                each_total_price.append(each_cart.product.price * each_cart.quantity)
+                total_price+=(each_cart.product.price * each_cart.quantity)
+        
+            context = {"total_items_num":total_items_num, 'carts_info':carts_info, 'each_total_price':each_total_price, 'total_price':total_price,'identify_farmer': identify_farmer(request.user)}
 
-    return render(request, 'pages/checkout.html', context)
+            return render(request, 'pages/checkout.html', context)
+        return HttpResponse('plz, first add product in cart             >   <a href="/">Home Page</a>')
+    return redirect('home')
 
 
 def history_view(request):
