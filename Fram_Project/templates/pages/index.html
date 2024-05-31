@@ -2,33 +2,58 @@
 
 
 {% block content %}
-<main class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-      {% for each_product in product %}
-      <div class="bg-white shadow-lg rounded-lg overflow-hidden"  onclick="view_product('{{each_product.slug}}')">
-        {% if each_product.product_images.exists %}
-        <img src="/media/{{each_product.product_images.first.image}}" alt="Product 1" class="w-full h-56 object-cover">
-        {% else %}
-        <img src="https://via.placeholder.com/300" alt="Product 2" class="w-full h-56 object-cover">
-        {% endif %}
+<main class="container mx-auto px-4 py-8 min-h-[80vh]">
+  <div class="mb-4">
+    <label for="sort" class="block text-sm font-medium text-gray-700">Sort by:</label>
+    <select name="sort" id="sort_product" onchange="short_call()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <option value="none"></option>
+        <option value="rate">Rating</option>
+        <option value="H_price">High Price</option>
+        <option value="L_price">Low Price</option>
+        <option value="sale">Sale Product</option>
+    </select>
+        <script>
+          {% if short_on != 'nope' %}
+          document.getElementById("sort_product").value= '{{short_on}}';
+          {% endif %}
 
-        <div class="p-4">
-          <h2 class="text-lg font-semibold text-gray-800">{{each_product.title}}</h2>
-          <p class="text-gray-600">Rs. {{each_product.price}}</p>
-          <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add to Cart</button>
-          <button class="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">View More</button>
+          function short_call() {
+              let sel = document.getElementById("sort_product").value;
+              url= '/short/'+sel
+              window.location.href = url;
+            }
+        </script>
+        <form method="GET" action="{% url 'home' %}" class="mt-4">
+          <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+              <input type="text" name="query" placeholder="Search..." class="px-4 py-2 w-full outline-none">
+              <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold hover:bg-blue-600">Search</button>
+          </div>
+      </form>
+  </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {% if product%}
+        {% for each_product in product %}
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden" >
+          {% if each_product.product_images.exists %}
+          <img src="/media/{{each_product.product_images.first.image}}" alt="Product 1" class="w-full h-56 object-cover"  onclick="view_product('{{each_product.slug}}')">
+          {% else %}
+          <img src="https://via.placeholder.com/300" alt="Product 2" class="w-full h-56 object-cover"  onclick="view_product('{{each_product.slug}}')">
+          {% endif %}
+
+          <div class="p-4">
+            <h2 class="text-lg font-semibold text-gray-800">{{each_product.title}}</h2>
+            <p class="text-gray-600">Rs. {{each_product.price}}</p>
+            <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="window.location.href = '/addcart/{{each_product.slug}}'">Add to Cart</button>
+            <button class="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"  onclick="window.location.href ='/product/{{each_product.slug}}'">View More</button>
+          </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+      <p class="text-6xl font-bold text-center w-full">Sorry, No Product has been Found.................</p>
+      {% endif %}
+
     </div>
   </main>
   
 {% endblock content %}
 
-
-{% block scripts %}
-function view_product(slug) {
-    window.open("/product/" + slug, "_blank");
-}
-
-{% endblock scripts %}

@@ -2,49 +2,19 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 import uuid
-
-# Create your models here.
-
-
-class CustomUser(models.Model):
-    user_m = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile_img = models.ImageField(upload_to='profile_pic', null=True, blank=True)
-    ph_num = models.ImageField(null=True)
-
-
-
-
-class FramerUser(models.Model):
-    customuser = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    Bio= models.TextField(default='Hey, I am Framer Here')
-    RATING_CHOICES = (
-        (1, '1'),
-        (2, '2'),
-        (3, '3'),
-        (4, '4'),
-        (5, '5'),
-    )
-    trust_rate = models.IntegerField(choices=RATING_CHOICES, default=5)
-    def __str__(self):
-        return self.user_m
-
-class BuyerUser(models.Model):
-    customuser = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    def __str__(self):
-        return self.user_m
-    
+from authenticate.models import *
 
 class Categories(models.Model):
     slug = models.SlugField(unique=True, null=True, blank=True)
     categories_name=  models.CharField(max_length=100)
-    discription = models.TextField()
+    discription = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.categories_name)
         super(Categories, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title
+        return self.categories_name
 
 class Product(models.Model):
     slug = models.SlugField(unique=True, null=True, blank=True)
@@ -82,7 +52,7 @@ class ProductImages(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=0)
     STATUS_CHOICES = (
         ('cart', 'In Cart'),
         ('purchased', 'Purchased'),
@@ -97,7 +67,7 @@ class Cart(models.Model):
 
 class CheckOutInfo(models.Model):
     user = models.ForeignKey(BuyerUser, on_delete=models.CASCADE)
-    cart = models.ForeignKey(Cart, on_delete=models.PROTECT)
+    cart = models.ManyToManyField(Cart)
 
     s_ph_num = models.CharField(max_length=20)
     s_email = models.EmailField()
@@ -115,13 +85,12 @@ class CheckOutInfo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Shipping Info for {self.user.username}"
+       return str(f"Shipping Info for {self.s_email}")
 
 
 
-# to track the shiping product
 class ShippingInfo(models.Model):
-    checkout_info = models.ForeignKey(CheckOutInfo, on_delete=models.CASCADE)
+    checkout_info = models.OneToOneField(CheckOutInfo, on_delete=models.CASCADE)
 
     PAYMENT_OPTIONS = [('cash_payment', 'Cash Payment'),]
     payment_option = models.CharField(max_length=20, choices=PAYMENT_OPTIONS, default='cash_payment')
@@ -132,4 +101,6 @@ class ShippingInfo(models.Model):
     recived_items= models.BooleanField(default=False)
     paid_money= models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Shipping Info for Order: {self.shipping_number}"
 

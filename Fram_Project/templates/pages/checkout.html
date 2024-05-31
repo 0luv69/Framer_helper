@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Checkout</h1>
+
+        <!-- Order Summary -->
+        <section class="bg-white shadow rounded-lg p-6 mb-8">
+            <!-- Order items list -->
+            <ul>
+                <!-- Replace this with dynamic order items -->
+                {% for each_cart in carts_info %}
+                <li class="flex justify-between py-2 border-b">
+                    <span>{{each_cart.product.title}}</span>
+                    <span>Rs. {{each_cart.product.price}} * {{each_cart.quantity}}</span>
+                </li>
+                {% endfor %}
+
+                <!-- End of dynamic order items -->
+                <li class="flex justify-between py-2 font-semibold">
+                    <span>Total</span>
+                    <span>Rs: {{total_price}}</span>
+                </li>
+            </ul>
+        </section>
+    <form action="/checkout/" method="post">
+        {% csrf_token %}
+        <section class="bg-white shadow rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="mb-4">
+                    <label for="s_ph_num" class="block text-sm font-medium">Phone Number</label>
+                    <input type="text" id="s_ph_num" name="s_ph_num" class="mt-1 p-2 w-full border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label for="s_email" class="block text-sm font-medium">Email</label>
+                    <input type="email" id="s_email" name="s_email" class="mt-1 p-2 w-full border rounded-md">
+                </div>
+                <div class="mb-4 col-span-2">
+                    <label for="address" class="block text-sm font-medium">Address</label>
+                    <input type="text" id="address" name="address" class="mt-1 p-2 w-full border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label for="city" class="block text-sm font-medium">City</label>
+                    <input type="text" id="city" name="city" class="mt-1 p-2 w-full border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label for="state" class="block text-sm font-medium">State</label>
+                    <input type="text" id="state" name="state" class="mt-1 p-2 w-full border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label for="postal_code" class="block text-sm font-medium">Postal Code</label>
+                    <input type="text" id="postal_code" name="postal_code" class="mt-1 p-2 w-full border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label for="country" class="block text-sm font-medium">Country</label>
+                    <input type="text" id="country" name="country" class="mt-1 p-2 w-full border rounded-md">
+                </div>
+            </div>
+    </section>
+
+    <!-- Order Notes -->
+    <section class="bg-white shadow rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-4">Order Notes</h2>
+            <div class="mb-4">
+                <label for="Order_Notes" class="block text-sm font-medium">Order Notes</label>
+                <textarea id="Order_Notes" name="Order_Notes" class="mt-1 p-2 w-full border rounded-md"></textarea>
+            </div>
+    </section>
+
+    <!-- Payment Information -->
+    <section class="bg-white shadow rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-4">Payment Information</h2>
+            <div class="mb-4">
+                <label for="payment_option" class="block text-sm font-medium">Payment Option</label>
+                <select id="payment_option" name="payment_option" class="mt-1 p-2 w-full border rounded-md">
+                    <option value="cash">Cash Payment</option>
+                </select>
+            </div>
+    </section>
+
+    <!-- Place Order Button -->
+    <button class="bg-blue-500 text-white font-semibold px-6 py-3 rounded-md">Place Order</button>
+</div>
+
+</form>
+
+{% endblock content %}

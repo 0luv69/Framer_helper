@@ -1,6 +1,0 @@
-NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  in setting 
-
-
-
-# set PATH=%PATH%;C:\Program Files\nodejs
-if npm not found error arrived add npm to path  
